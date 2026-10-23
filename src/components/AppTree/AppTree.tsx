@@ -69,6 +69,35 @@ export default function AppTree() {
         }
     }
 
+    const deleteFolder = async () => {
+        const { data: childrenFolders } = await supabase.from('folders').select().eq('data->>parentFolderID', selectedKey)
+        const { data: childrenPages } = await supabase.from('pages').select().eq('data->>parentFolderID', selectedKey)
+        const childrenFoldersID: string[] = childrenFolders!.map((folder) => folder.id)
+        const childrenPagesID: string[] = childrenPages!.map((page) => page.id)
+            if (childrenFoldersID.length > 0) {
+                const { success, error } = await supabase.from('folders').delete().eq('id', selectedKey)
+                if ( success ) {
+                    childrenFoldersID.forEach(async (folderID) => {
+                        const { data: folder } = await supabase.from('folders').select('data').eq('id', folderID).single()
+                        const { error } = await supabase.from('folders').update({ data: { ...folder?.data, parentFolderID: null }}).eq('id', folderID)
+                        error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
+                    })
+                } else {
+                    console.log(error)
+                } 
+            } else { 
+                const { error } = await supabase.from('folders').delete().eq('id', selectedKey)
+                error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
+            }
+            if (childrenPagesID.length > 0) {
+                childrenPagesID.forEach(async (pageID) => {
+                    const { data: page } = await supabase.from('pages').select('data').eq('id', pageID).single()
+                    const { error } = await supabase.from('pages').update({ data: { ...page?.data, parentFolderID: null }}).eq('id', pageID)
+                    error ? console.log(error) : console.log("page update SB OK")
+                })
+            }
+    }
+
     useEffect(() => {
         const getData = async() => {
             const dataFolders = await supabase.from('folders').select('*')
@@ -108,7 +137,8 @@ export default function AppTree() {
         <>
             <button onClick={createFolder}>Загрузить папку на сервак</button>
             <button onClick={createPage}>Загрузить док на сервак</button>
-            <button onClick={deletePage}>Удалить док с сервака</button>
+            <button onClick={deletePage}>Удалить док</button>
+            <button onClick={deleteFolder}>Удалить папку</button>
             <br />
             <Tree
                 value={structure}
