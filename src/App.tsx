@@ -1,8 +1,12 @@
-import AppTree from "./components/AppTree/AppTree"
+import AppTree from './components/AppTree/AppTree'
+import { AppNavbar } from './components/AppNavbar/AppNavbar'
 
 function App() {
   return (
-    <AppTree />
+    <>
+      <AppNavbar/>
+      <AppTree />
+    </>
   )
 }
 

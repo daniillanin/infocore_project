@@ -1,0 +1,14 @@
+.navbar-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    height: 50px;
+}
+.navbar-avatar-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+}
+.navbar-dropdown {
+    height: 40px;
+    width: 400px;
+}

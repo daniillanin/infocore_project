@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../../database/supabase'
+import './AppTree.scss'
 import { Tree } from 'primereact/tree'
 import type { TreeNode } from 'primereact/treenode'
-import { useEffect, useState } from 'react'
-import './AppTree.scss'
-import { supabase } from '../../database/supabase'
+
 
 export default function AppTree() {
     const [folders, setFolders] = useState<TreeNode[] | null>(null)
@@ -10,7 +11,7 @@ export default function AppTree() {
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string>('')
     
-    const createFolder = async() => {
+    const createFolder = async(): Promise<void> => {
         const createUUID = crypto.randomUUID()
         const folder: TreeNode = {
             id: createUUID,
@@ -19,7 +20,7 @@ export default function AppTree() {
             data: {
                 type: 'folder',
                 parentFolderID: null,
-                // directionID: null,
+                // libraryID: null,
                 level: 1
             },
             icon: 'pi pi-fw pi-folder',
@@ -36,7 +37,7 @@ export default function AppTree() {
         success ? setFolders((prev) => [...prev!, folder]) : null
     }
 
-    const createPage = async() => {
+    const createPage = async(): Promise<void> => {
         const createUUID = crypto.randomUUID()
         const page: TreeNode = {
             id: createUUID,
@@ -45,7 +46,7 @@ export default function AppTree() {
             data: {
                 type: 'page',
                 parentFolderID: null,
-                // directionID: null,
+                // libraryID: null,
                 content: '<p>Текст параграфа</p>'
             },
             icon: 'pi pi-fw pi-file',
@@ -62,14 +63,14 @@ export default function AppTree() {
         success ? setPages((prev) => [...prev!, page]) : null
     }
 
-    const deletePage = async () => {
+    const deletePage = async(): Promise<void> => {
         const { success } = await supabase.from('pages').delete().eq('id', selectedKey)
         if (success) {
             setPages((prev) => prev?.filter((page) => page.id !== selectedKey) ?? null)
         }
     }
 
-    const deleteFolder = async () => {
+    const deleteFolder = async(): Promise<void> => {
         const { data: childrenFolders } = await supabase.from('folders').select().eq('data->>parentFolderID', selectedKey)
         const { data: childrenPages } = await supabase.from('pages').select().eq('data->>parentFolderID', selectedKey)
         const childrenFoldersID: string[] = childrenFolders!.map((folder) => folder.id)
@@ -77,7 +78,7 @@ export default function AppTree() {
             if (childrenFoldersID.length > 0) {
                 const { success, error } = await supabase.from('folders').delete().eq('id', selectedKey)
                 if ( success ) {
-                    childrenFoldersID.forEach(async (folderID) => {
+                    childrenFoldersID.forEach(async(folderID) => {
                         const { data: folder } = await supabase.from('folders').select('data').eq('id', folderID).single()
                         const { error } = await supabase.from('folders').update({ data: { ...folder?.data, parentFolderID: null }}).eq('id', folderID)
                         error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
@@ -90,7 +91,7 @@ export default function AppTree() {
                 error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
             }
             if (childrenPagesID.length > 0) {
-                childrenPagesID.forEach(async (pageID) => {
+                childrenPagesID.forEach(async(pageID) => {
                     const { data: page } = await supabase.from('pages').select('data').eq('id', pageID).single()
                     const { error } = await supabase.from('pages').update({ data: { ...page?.data, parentFolderID: null }}).eq('id', pageID)
                     error ? console.log(error) : console.log("page update SB OK")
@@ -135,11 +136,6 @@ export default function AppTree() {
 
     return (
         <>
-            <button onClick={createFolder}>Загрузить папку на сервак</button>
-            <button onClick={createPage}>Загрузить док на сервак</button>
-            <button onClick={deletePage}>Удалить док</button>
-            <button onClick={deleteFolder}>Удалить папку</button>
-            <br />
             <Tree
                 value={structure}
                 selectionMode="single"
@@ -149,6 +145,10 @@ export default function AppTree() {
                 filterMode="lenient"
                 filterPlaceholder="Поиск"
             />
+            <button onClick={createFolder}>Загрузить папку на сервак</button>
+            <button onClick={createPage}>Загрузить док на сервак</button>
+            <button onClick={deletePage}>Удалить док</button>
+            <button onClick={deleteFolder}>Удалить папку</button>
         </>  
     )
 }

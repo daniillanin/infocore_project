@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { PrimeReactProvider } from 'primereact/api'
-import './index.scss'
+import './main.scss'
 import 'primeicons/primeicons.css'
 import "primereact/resources/themes/lara-light-cyan/theme.css"
 
