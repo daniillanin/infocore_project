@@ -5,7 +5,7 @@ import { Tree } from 'primereact/tree'
 import type { TreeNode } from 'primereact/treenode'
 
 
-export default function AppTree() {
+export function AppTree() {
     const [folders, setFolders] = useState<TreeNode[] | null>(null)
     const [pages, setPages] = useState<TreeNode[] | null>(null)
     const [structure, setStructure] = useState<TreeNode[]>([])
@@ -144,11 +144,15 @@ export default function AppTree() {
                 filter
                 filterMode="lenient"
                 filterPlaceholder="Поиск"
+                className='tree'
             />
-            <button onClick={createFolder}>Загрузить папку на сервак</button>
+            {/* <div>
+                <button onClick={createFolder}>Загрузить папку на сервак</button>
             <button onClick={createPage}>Загрузить док на сервак</button>
             <button onClick={deletePage}>Удалить док</button>
             <button onClick={deleteFolder}>Удалить папку</button>
+            </div> */}
+            
         </>  
     )
 }

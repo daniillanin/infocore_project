@@ -3,8 +3,11 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     height: 50px;
+    > img {
+        height: 60%
+    }
 }
-.navbar-avatar-wrapper {
+.navbar-wrapper-avatar {
     display: flex;
     flex-flow: row nowrap;
 }
