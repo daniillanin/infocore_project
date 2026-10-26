@@ -1,0 +1,15 @@
+.viewmain-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 15px;
+    min-height: 100vh;
+    .viewmain-wrapper-main {
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 1 0 auto;
+        .viewmain-content {
+            flex: 1 0 auto;
+            text-align: center;
+        }
+    }
+}
