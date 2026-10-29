@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../../database/supabase'
 import './AppTree.scss'
-import { Tree } from 'primereact/tree'
 import type { TreeNode } from 'primereact/treenode'
-
+import { useEffect, useState, useContext } from 'react'
+import { dataContext } from '../../contexts/DataContext'
+import { supabase } from '../../database/supabase'
+import { Tree } from 'primereact/tree'
 
 export function AppTree() {
-    const [folders, setFolders] = useState<TreeNode[] | null>(null)
-    const [pages, setPages] = useState<TreeNode[] | null>(null)
+    const {folders, pages, setFolders, setPages, getSelectedID} = useContext(dataContext)
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string>('')
     
@@ -21,6 +20,7 @@ export function AppTree() {
                 type: 'folder',
                 parentFolderID: null,
                 // libraryID: null,
+                // arhive: false,
                 level: 1
             },
             icon: 'pi pi-fw pi-folder',
@@ -34,7 +34,7 @@ export function AppTree() {
             expanded: undefined
         }
         const { success } = await supabase.from('folders').insert(folder)
-        success ? setFolders((prev) => [...prev!, folder]) : null
+        success ? setFolders((prev: TreeNode[]) => [...prev!, folder]) : null
     }
 
     const createPage = async(): Promise<void> => {
@@ -47,6 +47,7 @@ export function AppTree() {
                 type: 'page',
                 parentFolderID: null,
                 // libraryID: null,
+                // arhive: false,
                 content: '<p>Текст параграфа</p>'
             },
             icon: 'pi pi-fw pi-file',
@@ -60,13 +61,13 @@ export function AppTree() {
             expanded: undefined
         }
         const { success } = await supabase.from('pages').insert(page)
-        success ? setPages((prev) => [...prev!, page]) : null
+        success ? setPages((prev: TreeNode[]) => [...prev!, page]) : null
     }
 
     const deletePage = async(): Promise<void> => {
         const { success } = await supabase.from('pages').delete().eq('id', selectedKey)
         if (success) {
-            setPages((prev) => prev?.filter((page) => page.id !== selectedKey) ?? null)
+            setPages((prev: TreeNode[]) => prev?.filter((page) => page.id !== selectedKey) ?? null)
         }
     }
 
@@ -81,14 +82,14 @@ export function AppTree() {
                     childrenFoldersID.forEach(async(folderID) => {
                         const { data: folder } = await supabase.from('folders').select('data').eq('id', folderID).single()
                         const { error } = await supabase.from('folders').update({ data: { ...folder?.data, parentFolderID: null }}).eq('id', folderID)
-                        error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
+                        error ? console.log(error) : setFolders((prev: TreeNode[]) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
                     })
                 } else {
                     console.log(error)
                 } 
             } else { 
                 const { error } = await supabase.from('folders').delete().eq('id', selectedKey)
-                error ? console.log(error) : setFolders((prev) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
+                error ? console.log(error) : setFolders((prev: TreeNode[]) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
             }
             if (childrenPagesID.length > 0) {
                 childrenPagesID.forEach(async(pageID) => {
@@ -100,19 +101,9 @@ export function AppTree() {
     }
 
     useEffect(() => {
-        const getData = async() => {
-            const dataFolders = await supabase.from('folders').select('*')
-            setFolders(dataFolders.data)
-            const dataPages = await supabase.from('pages').select('*')
-            setPages(dataPages.data)
-        }
-        getData()
-    }, [])
-
-    useEffect(() => {
         if (folders && pages) {
-            const cloneFolders = structuredClone(folders)
-            const clonePages = structuredClone(pages)
+            const cloneFolders: TreeNode[] = structuredClone(folders)
+            const clonePages: TreeNode[] = structuredClone(pages)
             //распределение страниц по папкам
             clonePages.forEach((page) => {
                 const parent = page.data?.parentFolderID ? cloneFolders.find((folder) => folder.id === page.data.parentFolderID) : undefined
@@ -134,6 +125,12 @@ export function AppTree() {
         }
     }, [folders, pages])
 
+    useEffect(() => {
+        if (selectedKey) {
+            getSelectedID(selectedKey)
+        }
+    }, [selectedKey]);
+
     return (
         <>
             <Tree
@@ -148,11 +145,10 @@ export function AppTree() {
             />
             {/* <div>
                 <button onClick={createFolder}>Загрузить папку на сервак</button>
-            <button onClick={createPage}>Загрузить док на сервак</button>
-            <button onClick={deletePage}>Удалить док</button>
-            <button onClick={deleteFolder}>Удалить папку</button>
-            </div> */}
-            
+                <button onClick={createPage}>Загрузить док на сервак</button>
+                <button onClick={deletePage}>Удалить док</button>
+                <button onClick={deleteFolder}>Удалить папку</button>
+            </div>  */}
         </>  
     )
 }

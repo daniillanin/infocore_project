@@ -3,6 +3,7 @@ import { AppTree } from "../../components/AppTree/AppTree"
 import { AppNavbar } from "../../components/AppNavbar/AppNavbar"
 import { AppFooter } from '../../components/AppFooter/AppFooter'
 import { AppStructure } from "../../components/AppSrtucture/AppSrtucture"
+import { AppContent } from '../../components/AppContent/AppContent'
 
 export function ViewMain() {
     return (
@@ -12,6 +13,8 @@ export function ViewMain() {
                 <AppTree/>
                 <div className='viewmain-content'>
                     <AppStructure />
+                    {/* или */}
+                    <AppContent/>
                 </div>
             </div>
             <AppFooter />
