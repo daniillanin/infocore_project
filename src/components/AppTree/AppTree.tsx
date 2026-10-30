@@ -6,9 +6,11 @@ import { supabase } from '../../database/supabase'
 import { Tree } from 'primereact/tree'
 
 export function AppTree() {
-    const {folders, pages, setFolders, setPages, getSelectedID} = useContext(dataContext)
+    const {folders, pages, setFolders, setPages, setSelectedNode} = useContext(dataContext)
+
     const [structure, setStructure] = useState<TreeNode[]>([])
-    const [selectedKey, setSelectedKey] = useState<string>('')
+    const [selectedKey, setSelectedKey] = useState<string | null>(null)
+    // const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null)
     
     const createFolder = async(): Promise<void> => {
         const createUUID = crypto.randomUUID()
@@ -125,12 +127,6 @@ export function AppTree() {
         }
     }, [folders, pages])
 
-    useEffect(() => {
-        if (selectedKey) {
-            getSelectedID(selectedKey)
-        }
-    }, [selectedKey]);
-
     return (
         <>
             <Tree
@@ -138,6 +134,8 @@ export function AppTree() {
                 selectionMode="single"
                 selectionKeys={selectedKey}
                 onSelectionChange={(e) => setSelectedKey(e.value as string)}
+                onSelect={(e) => setSelectedNode(e.node)}
+                onUnselect={() => setSelectedNode(null)}
                 filter
                 filterMode="lenient"
                 filterPlaceholder="Поиск"
