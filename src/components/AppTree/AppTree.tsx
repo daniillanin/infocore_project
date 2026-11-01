@@ -1,16 +1,26 @@
 import './AppTree.scss'
-import type { TreeNode } from 'primereact/treenode'
 import { useEffect, useState, useContext } from 'react'
 import { dataContext } from '../../contexts/DataContext'
 import { supabase } from '../../database/supabase'
 import { Tree } from 'primereact/tree'
+import type { TreeNode } from 'primereact/treenode'
+import type { Library } from '../../types/interfaces'
 
 export function AppTree() {
     const {folders, pages, setFolders, setPages, setSelectedNode} = useContext(dataContext)
-
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
-    // const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null)
+
+    const createLibrary = async () => {
+        const createUUID = crypto.randomUUID()
+        const number = Math.floor(Math.random() * 1000) + 1
+        const library: Library = {
+            id: createUUID,
+            key: `LIB${number}`,
+            name: `Библиотека ${number}`,
+        }
+        await supabase.from('libraries').insert(library)
+    }
     
     const createFolder = async(): Promise<void> => {
         const createUUID = crypto.randomUUID()
@@ -21,8 +31,8 @@ export function AppTree() {
             data: {
                 type: 'folder',
                 parentFolderID: null,
-                // libraryID: null,
-                // arhive: false,
+                libraryID: "9de63d9d-8582-49ea-97e7-6eb421479e23",
+                archive: false,
                 level: 1
             },
             icon: 'pi pi-fw pi-folder',
@@ -48,8 +58,8 @@ export function AppTree() {
             data: {
                 type: 'page',
                 parentFolderID: null,
-                // libraryID: null,
-                // arhive: false,
+                libraryID: "9de63d9d-8582-49ea-97e7-6eb421479e23",
+                archive: false,
                 content: '<p>Текст параграфа</p>'
             },
             icon: 'pi pi-fw pi-file',
@@ -141,12 +151,13 @@ export function AppTree() {
                 filterPlaceholder="Поиск"
                 className='tree'
             />
-            {/* <div>
+            <div>
                 <button onClick={createFolder}>Загрузить папку на сервак</button>
                 <button onClick={createPage}>Загрузить док на сервак</button>
                 <button onClick={deletePage}>Удалить док</button>
                 <button onClick={deleteFolder}>Удалить папку</button>
-            </div>  */}
+                <button onClick={createLibrary}>Создать библ</button>
+            </div> 
         </>  
     )
 }
