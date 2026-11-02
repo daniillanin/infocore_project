@@ -4,10 +4,10 @@ import { dataContext } from '../../contexts/DataContext'
 import { supabase } from '../../database/supabase'
 import { Tree } from 'primereact/tree'
 import type { TreeNode } from 'primereact/treenode'
-import type { Library } from '../../types/interfaces'
+import type { DataContextInterface, Library } from '../../types/interfaces'
 
 export function AppTree() {
-    const {folders, pages, setFolders, setPages, setSelectedNode} = useContext(dataContext)
+    const {folders, pages, setSelectedNode, createFolder, createPage, deleteItem} = useContext<DataContextInterface>(dataContext)
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
@@ -20,96 +20,6 @@ export function AppTree() {
             name: `Библиотека ${number}`,
         }
         await supabase.from('libraries').insert(library)
-    }
-    
-    const createFolder = async(): Promise<void> => {
-        const createUUID = crypto.randomUUID()
-        const folder: TreeNode = {
-            id: createUUID,
-            key: createUUID,
-            label: `Папка ${Math.floor(Math.random() * 1000) + 1}`,
-            data: {
-                type: 'folder',
-                parentFolderID: null,
-                libraryID: "9de63d9d-8582-49ea-97e7-6eb421479e23",
-                archive: false,
-                level: 1
-            },
-            icon: 'pi pi-fw pi-folder',
-            children: [],
-            style: undefined,
-            className: undefined,
-            droppable: undefined,
-            draggable: undefined,
-            selectable: undefined,
-            leaf: undefined,
-            expanded: undefined
-        }
-        const { success } = await supabase.from('folders').insert(folder)
-        success ? setFolders((prev: TreeNode[]) => [...prev!, folder]) : null
-    }
-
-    const createPage = async(): Promise<void> => {
-        const createUUID = crypto.randomUUID()
-        const page: TreeNode = {
-            id: createUUID,
-            key: createUUID,
-            label: `Страница ${Math.floor(Math.random() * 1000) + 1}`,
-            data: {
-                type: 'page',
-                parentFolderID: null,
-                libraryID: "9de63d9d-8582-49ea-97e7-6eb421479e23",
-                archive: false,
-                content: '<p>Текст параграфа</p>'
-            },
-            icon: 'pi pi-fw pi-file',
-            children: undefined,
-            style: undefined,
-            className: undefined,
-            droppable: undefined,
-            draggable: undefined,
-            selectable: undefined,
-            leaf: undefined,
-            expanded: undefined
-        }
-        const { success } = await supabase.from('pages').insert(page)
-        success ? setPages((prev: TreeNode[]) => [...prev!, page]) : null
-    }
-
-    const deletePage = async(): Promise<void> => {
-        const { success } = await supabase.from('pages').delete().eq('id', selectedKey)
-        if (success) {
-            setPages((prev: TreeNode[]) => prev?.filter((page) => page.id !== selectedKey) ?? null)
-        }
-    }
-
-    const deleteFolder = async(): Promise<void> => {
-        const { data: childrenFolders } = await supabase.from('folders').select().eq('data->>parentFolderID', selectedKey)
-        const { data: childrenPages } = await supabase.from('pages').select().eq('data->>parentFolderID', selectedKey)
-        const childrenFoldersID: string[] = childrenFolders!.map((folder) => folder.id)
-        const childrenPagesID: string[] = childrenPages!.map((page) => page.id)
-            if (childrenFoldersID.length > 0) {
-                const { success, error } = await supabase.from('folders').delete().eq('id', selectedKey)
-                if ( success ) {
-                    childrenFoldersID.forEach(async(folderID) => {
-                        const { data: folder } = await supabase.from('folders').select('data').eq('id', folderID).single()
-                        const { error } = await supabase.from('folders').update({ data: { ...folder?.data, parentFolderID: null }}).eq('id', folderID)
-                        error ? console.log(error) : setFolders((prev: TreeNode[]) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
-                    })
-                } else {
-                    console.log(error)
-                } 
-            } else { 
-                const { error } = await supabase.from('folders').delete().eq('id', selectedKey)
-                error ? console.log(error) : setFolders((prev: TreeNode[]) => prev?.filter((folder) => folder.id !== selectedKey) ?? null)
-            }
-            if (childrenPagesID.length > 0) {
-                childrenPagesID.forEach(async(pageID) => {
-                    const { data: page } = await supabase.from('pages').select('data').eq('id', pageID).single()
-                    const { error } = await supabase.from('pages').update({ data: { ...page?.data, parentFolderID: null }}).eq('id', pageID)
-                    error ? console.log(error) : console.log("page update SB OK")
-                })
-            }
     }
 
     useEffect(() => {
@@ -149,13 +59,13 @@ export function AppTree() {
                 filter
                 filterMode="lenient"
                 filterPlaceholder="Поиск"
+                emptyMessage="Ничего не найдено"
                 className='tree'
             />
             <div>
-                <button onClick={createFolder}>Загрузить папку на сервак</button>
-                <button onClick={createPage}>Загрузить док на сервак</button>
-                <button onClick={deletePage}>Удалить док</button>
-                <button onClick={deleteFolder}>Удалить папку</button>
+                <button onClick={createFolder}>Добавить папку</button>
+                <button onClick={createPage}>Добавить страницу</button>
+                <button onClick={deleteItem}>Удалить</button>
                 <button onClick={createLibrary}>Создать библ</button>
             </div> 
         </>  

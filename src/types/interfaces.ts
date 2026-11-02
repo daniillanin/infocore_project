@@ -9,7 +9,10 @@ export interface DataContextInterface {
     setFolders: React.Dispatch<React.SetStateAction<TreeNode[] | null>>;
     setPages: React.Dispatch<React.SetStateAction<TreeNode[] | null>>;
     setSelectedNode: React.Dispatch<React.SetStateAction<TreeNode | null>>;
-    setSelectedLibrary: React.Dispatch<React.SetStateAction<Library | null>>
+    setSelectedLibrary: React.Dispatch<React.SetStateAction<Library | null>>;
+    createFolder: () => Promise<void>;
+    createPage: () => Promise<void>;
+    deleteItem: () => Promise<void>
 }
 export interface DataContextProviderProps {
     children: ReactNode
