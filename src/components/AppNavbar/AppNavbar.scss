@@ -2,9 +2,10 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    height: 50px;
+    align-items: center;
+    margin-bottom: 10px;
     > img {
-        height: 60%
+        height: 35px
     }
 }
 .navbar-wrapper-avatar {

@@ -63,9 +63,9 @@ export function AppTree() {
                 className='tree'
             />
             <div>
-                <button onClick={createFolder}>Добавить папку</button>
-                <button onClick={createPage}>Добавить страницу</button>
-                <button onClick={deleteItem}>Удалить</button>
+                <button onClick={createFolder}>Добавить папку</button><br/>
+                <button onClick={createPage}>Добавить страницу</button><br/>
+                <button onClick={deleteItem}>Удалить</button><br/>
                 <button onClick={createLibrary}>Создать библ</button>
             </div> 
         </>  

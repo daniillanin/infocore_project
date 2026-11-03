@@ -7,15 +7,35 @@ const FooterWrapper = styled.div`
     align-items: center;
     margin-top: 10px;
     height: 40px;
+    font-width: 200;
     background-color: rgb(229, 231, 235);
     border: 1px solid rgb(229, 231, 235);
     border-radius: 6px;
 `
-
+const FooterButton = styled.button`
+    height: 100%;
+    font-width: 200;
+    background-color: transparent;
+    border: none;
+    &:hover {
+        cursor: pointer
+    }
+    &:nth-child(odd) {
+        margin-right: 10px
+    }
+    span {
+        margin-left: 5px
+    }
+`
 export function AppFooter() {
     return (
         <FooterWrapper>
-            <p>позже здесь будет функционал</p>
+            <FooterButton className="pi pi-bookmark">
+                <span>Избранное</span>
+            </FooterButton>
+            <FooterButton className="pi pi-book">
+                <span>Архив</span>
+            </FooterButton>
         </FooterWrapper>
     )
 }

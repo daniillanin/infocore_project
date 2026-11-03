@@ -1,8 +1,28 @@
+@font-face {
+    font-family: "Montserrat";
+    src: url(./assets/fonts/Montserrat-Regular.ttf);
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url(./assets/fonts/Montserrat-Medium.ttf);
+    font-style: normal;
+    font-weight: bolder;
+}
+@font-face {
+    font-family: "Montserrat";
+    src: url(./assets/fonts/Montserrat-Bold.ttf);
+    font-style: normal;
+    font-weight: bold;
+}
 body {
     margin: 0;
     padding: 0;
 }
 * {
+    font-family: "Montserrat";
+    font-style: normal;
     font-size: 0.9rem;
     color: #4b5563;
 }
