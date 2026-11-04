@@ -4,7 +4,7 @@ import { dataContext } from '../../contexts/DataContext'
 import { supabase } from '../../database/supabase'
 import { Tree } from 'primereact/tree'
 import type { TreeNode } from 'primereact/treenode'
-import type { DataContextInterface, Library } from '../../types/interfaces'
+import type { DataContextInterface, Library } from '../../types/DataContextTypes'
 
 export function AppTree() {
     const {folders, pages, setSelectedNode, createFolder, createPage, deleteItem} = useContext<DataContextInterface>(dataContext)

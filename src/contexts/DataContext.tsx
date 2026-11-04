@@ -1,9 +1,9 @@
 import { useState, useEffect, createContext } from 'react'
 import { supabase } from '../database/supabase'
 import type { TreeNode } from 'primereact/treenode'
-import type { DataContextInterface } from '../types/interfaces'
-import type { DataContextProviderProps } from '../types/interfaces'
-import type { Library } from '../types/interfaces'
+import type { DataContextInterface } from '../types/DataContextTypes'
+import type { DataContextProviderProps } from '../types/DataContextTypes'
+import type { Library } from '../types/DataContextTypes'
 
 export const dataContext = createContext<DataContextInterface | null>(null)
 
