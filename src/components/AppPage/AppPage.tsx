@@ -1,29 +1,28 @@
 import './AppPage.scss'
 import type { DataContextInterface } from '../../types/DataContextTypes'
-import { useContext, useEffect, useState } from 'react'
+import { useContext} from 'react'
 import { supabase } from '../../database/supabase'
 import { dataContext } from '../../contexts/DataContext'
 import { AppEditor } from '../AppEditor/AppEditor'
 
 export function AppPage() {
-    const { selectedNode, setSelectedNode } = useContext<DataContextInterface>(dataContext)
-    const [currentContent, setCurrentContent] = useState<string>("")
+    const {selectedNode, setSelectedNode, setPages} = useContext<DataContextInterface>(dataContext)
 
-    const setContent = (newValue: string): void => { 
-        setCurrentContent(newValue) 
+    const setContent = (newValue: string): void => {  
+        const updateDataNode = {...selectedNode?.data, content: newValue}
+        setSelectedNode((prev) => ({...prev, data: updateDataNode}))
     }
     const saveEdit = async () => {
-        const updateDataNode = {...selectedNode?.data, content: currentContent}
-        const { error } = await supabase.from("pages").update({'data': updateDataNode}).eq('id', selectedNode?.id)
+        const { error } = await supabase.from("pages").update({'data': selectedNode?.data}).eq('id', selectedNode?.id)
+        if (!error) {
+            setPages((prev) => prev?.map((page) => page.id === selectedNode?.id ? selectedNode : page))
+        }
     }
-    useEffect(() => {
-        setCurrentContent(selectedNode?.data.content)
-    }, [selectedNode])
     return (
         <>  
             <button onClick={saveEdit}>Сохранить изменения</button>
             <h1>{selectedNode ? selectedNode.label : ''}</h1>
-            <div>{selectedNode ? <AppEditor content={currentContent} setContent={setContent}/> : ''}</div>
+            <div>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
         </>
     )
 }
