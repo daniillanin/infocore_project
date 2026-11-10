@@ -1,0 +1,9 @@
+.page-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    .page-content {
+        margin-top: 10px;
+        flex: 1 0 auto;
+    }
+}

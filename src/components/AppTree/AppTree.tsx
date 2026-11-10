@@ -62,12 +62,12 @@ export function AppTree() {
                 emptyMessage="Ничего не найдено"
                 className='tree'
             />
-            <div>
+            {/* <div>
                 <button onClick={createFolder}>Добавить папку</button><br/>
                 <button onClick={createPage}>Добавить страницу</button><br/>
                 <button onClick={deleteItem}>Удалить</button><br/>
                 <button onClick={createLibrary}>Создать библ</button>
-            </div> 
+            </div>  */}
         </>  
     )
 }

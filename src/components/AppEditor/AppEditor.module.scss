@@ -1,0 +1,26 @@
+.editorButtons {
+  button {
+    padding: 0;
+    margin-right: 5px;
+  svg {
+    // убирает лишний зазор снизу у SVG
+    display: block;
+    width: 16px;
+    height: 16px;
+    &:not(.color) {
+      fill: rgb(43, 42, 42);
+      }
+    }
+  }
+}
+.editorWrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+}
+.editorContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}

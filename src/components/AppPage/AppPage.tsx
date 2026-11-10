@@ -19,10 +19,13 @@ export function AppPage() {
         }
     }
     return (
-        <>  
-            <button onClick={saveEdit}>Сохранить изменения</button>
-            <h1>{selectedNode ? selectedNode.label : ''}</h1>
-            <div>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
-        </>
+        <div className='page-wrapper'> 
+            <div className='page-header'>
+                <h1>{selectedNode ? selectedNode.label : ''}</h1>
+                <button onClick={saveEdit}>Сохранить изменения</button>
+            </div>  
+            <div className='page-content'>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
+            <div className='page-footer'></div>
+        </div>
     )
 }
