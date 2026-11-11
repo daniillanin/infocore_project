@@ -7,7 +7,7 @@ import type { TreeNode } from 'primereact/treenode'
 import type { DataContextInterface, Library } from '../../types/DataContextTypes'
 
 export function AppTree() {
-    const {folders, pages, setSelectedNode, createFolder, createPage, deleteItem} = useContext<DataContextInterface>(dataContext)
+    const {folders, pages, setSelectedNode, deleteItem} = useContext<DataContextInterface>(dataContext)
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
@@ -63,8 +63,6 @@ export function AppTree() {
                 className='tree'
             />
             {/* <div>
-                <button onClick={createFolder}>Добавить папку</button><br/>
-                <button onClick={createPage}>Добавить страницу</button><br/>
                 <button onClick={deleteItem}>Удалить</button><br/>
                 <button onClick={createLibrary}>Создать библ</button>
             </div>  */}

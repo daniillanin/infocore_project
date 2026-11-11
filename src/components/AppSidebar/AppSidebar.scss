@@ -1,0 +1,9 @@
+.sidebar-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    button{
+        &:nth-child(1n+1) {
+            margin-top: 2px;
+        }
+    }
+}
