@@ -1,18 +1,29 @@
-import { useState, useEffect, createContext } from 'react'
-import { supabase } from '../database/supabase'
 import type { TreeNode } from 'primereact/treenode'
 import type { DataContextInterface } from '../types/DataContextTypes'
 import type { DataContextProviderProps } from '../types/DataContextTypes'
 import type { Library } from '../types/DataContextTypes'
+import { useState, useEffect, createContext } from 'react'
+import { supabase } from '../database/supabase'
 
-export const dataContext = createContext<DataContextInterface | null>(null)
+export const dataContext = createContext<DataContextInterface>(null as unknown as DataContextInterface)
 
 export function DataContextProvider({children}: DataContextProviderProps) {
     const [libraries, setLibraries] = useState<Library[] | null>(null)
     const [folders, setFolders] = useState<TreeNode[] | null>(null)
     const [pages, setPages] = useState<TreeNode[] | null>(null)
     const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null)
-    const [selectedLibrary, setSelectedLibrary] = useState<Library | null>(null) 
+    const [selectedLibrary, setSelectedLibrary] = useState<Library | null>(null)
+
+    const createLibrary = async () => {
+        const createUUID = crypto.randomUUID()
+        const number = Math.floor(Math.random() * 1000) + 1
+        const library: Library = {
+            id: createUUID,
+            key: `LIB${number}`,
+            name: `Библиотека ${number}`,
+        }
+        await supabase.from('libraries').insert(library)
+    }
 
     const createFolder = async (): Promise<void> => {
         const createUUID = crypto.randomUUID()
@@ -66,6 +77,14 @@ export function DataContextProvider({children}: DataContextProviderProps) {
         }
         const { error } = await supabase.from('pages').insert(page)
         !error ? setPages((prev) => [...prev!, page]) : null
+    }
+
+    const moveItem = () => {
+        if (selectedNode?.data.type === 'folder') {
+
+        } else if (selectedNode?.data.type === 'page') {
+            // вывести предупреждение о выборе только папки
+        }
     }
 
     const deleteItem = async (): Promise<void> => {
@@ -125,6 +144,7 @@ export function DataContextProvider({children}: DataContextProviderProps) {
                 setPages,
                 setSelectedNode,
                 setSelectedLibrary,
+                createLibrary,
                 createFolder,
                 createPage,
                 deleteItem

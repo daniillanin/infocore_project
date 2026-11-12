@@ -6,7 +6,7 @@ import { dataContext } from '../../contexts/DataContext'
 import { AppEditor } from '../AppEditor/AppEditor'
 
 export function AppPage() {
-    const {selectedNode, setSelectedNode, setPages} = useContext<DataContextInterface>(dataContext)
+    const {selectedNode, setSelectedNode, setPages, deleteItem} = useContext<DataContextInterface>(dataContext)
 
     const setContent = (newValue: string): void => {  
         const updateDataNode = {...selectedNode?.data, content: newValue}
@@ -23,6 +23,7 @@ export function AppPage() {
             <div className='page-header'>
                 <h1>{selectedNode ? selectedNode.label : ''}</h1>
                 <button onClick={saveEdit}>Сохранить изменения</button>
+                <button onClick={deleteItem}>Удалить страницу</button>
             </div>  
             <div className='page-content'>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
             <div className='page-footer'></div>

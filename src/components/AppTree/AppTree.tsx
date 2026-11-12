@@ -7,20 +7,9 @@ import type { TreeNode } from 'primereact/treenode'
 import type { DataContextInterface, Library } from '../../types/DataContextTypes'
 
 export function AppTree() {
-    const {folders, pages, setSelectedNode, deleteItem} = useContext<DataContextInterface>(dataContext)
+    const {folders, pages, setSelectedNode} = useContext<DataContextInterface>(dataContext)
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
-
-    const createLibrary = async () => {
-        const createUUID = crypto.randomUUID()
-        const number = Math.floor(Math.random() * 1000) + 1
-        const library: Library = {
-            id: createUUID,
-            key: `LIB${number}`,
-            name: `Библиотека ${number}`,
-        }
-        await supabase.from('libraries').insert(library)
-    }
 
     useEffect(() => {
         if (folders && pages) {
@@ -48,24 +37,18 @@ export function AppTree() {
     }, [folders, pages])
 
     return (
-        <>
-            <Tree
-                value={structure}
-                selectionMode="single"
-                selectionKeys={selectedKey}
-                onSelectionChange={(e) => setSelectedKey(e.value as string)}
-                onSelect={(e) => setSelectedNode(e.node)}
-                onUnselect={() => setSelectedNode(null)}
-                filter
-                filterMode="lenient"
-                filterPlaceholder="Поиск"
-                emptyMessage="Ничего не найдено"
-                className='tree'
-            />
-            {/* <div>
-                <button onClick={deleteItem}>Удалить</button><br/>
-                <button onClick={createLibrary}>Создать библ</button>
-            </div>  */}
-        </>  
+        <Tree
+            value={structure}
+            selectionMode="single"
+            selectionKeys={selectedKey}
+            onSelectionChange={(e) => setSelectedKey(e.value as string)}
+            onSelect={(e) => setSelectedNode(e.node)}
+            onUnselect={() => setSelectedNode(null)}
+            filter
+            filterMode="lenient"
+            filterPlaceholder="Поиск"
+            emptyMessage="Ничего не найдено"
+            className='tree'
+        />
     )
 }

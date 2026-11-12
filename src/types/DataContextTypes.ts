@@ -10,6 +10,7 @@ export interface DataContextInterface {
     setPages: React.Dispatch<React.SetStateAction<TreeNode[] | null>>;
     setSelectedNode: React.Dispatch<React.SetStateAction<TreeNode | null>>;
     setSelectedLibrary: React.Dispatch<React.SetStateAction<Library | null>>;
+    createLibrary: () => Promise<void>;
     createFolder: () => Promise<void>;
     createPage: () => Promise<void>;
     deleteItem: () => Promise<void>
