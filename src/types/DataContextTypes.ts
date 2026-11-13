@@ -6,13 +6,16 @@ export interface DataContextInterface {
     folders: TreeNode[] | null;
     pages: TreeNode[] | null;
     selectedNode: TreeNode | null;
+    selectedNodeMove: TreeNode | null;
     setFolders: React.Dispatch<React.SetStateAction<TreeNode[] | null>>;
     setPages: React.Dispatch<React.SetStateAction<TreeNode[] | null>>;
     setSelectedNode: React.Dispatch<React.SetStateAction<TreeNode | null>>;
+    setSelectedNodeMove: React.Dispatch<React.SetStateAction<TreeNode | null>>;
     setSelectedLibrary: React.Dispatch<React.SetStateAction<Library | null>>;
     createLibrary: () => Promise<void>;
     createFolder: () => Promise<void>;
     createPage: () => Promise<void>;
+    moveItem: () => Promise<void>;
     deleteItem: () => Promise<void>
 }
 export interface DataContextProviderProps {

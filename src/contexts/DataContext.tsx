@@ -12,6 +12,7 @@ export function DataContextProvider({children}: DataContextProviderProps) {
     const [folders, setFolders] = useState<TreeNode[] | null>(null)
     const [pages, setPages] = useState<TreeNode[] | null>(null)
     const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null)
+    const [selectedNodeMove, setSelectedNodeMove] = useState<TreeNode | null>(null)
     const [selectedLibrary, setSelectedLibrary] = useState<Library | null>(null)
 
     const createLibrary = async () => {
@@ -79,11 +80,14 @@ export function DataContextProvider({children}: DataContextProviderProps) {
         !error ? setPages((prev) => [...prev!, page]) : null
     }
 
-    const moveItem = () => {
-        if (selectedNode?.data.type === 'folder') {
-
-        } else if (selectedNode?.data.type === 'page') {
-            // вывести предупреждение о выборе только папки
+    const moveItem = async (): Promise<void> => {
+        if (selectedNodeMove && selectedNode?.data.type === 'folder') {
+            const { error } = await supabase.from('folders').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
+            !error ? setFolders((prev) => prev?.map((folder) => folder.id === selectedNode.id ? {...folder, data: {...folder.data, parentFolderID: selectedNodeMove.id}} : folder)) : console.log(error)
+            
+        } else if (selectedNodeMove && selectedNode?.data.type === 'page') {
+            const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
+            !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: selectedNodeMove.id}} : page)) : console.log(error)
         }
     }
 
@@ -140,13 +144,16 @@ export function DataContextProvider({children}: DataContextProviderProps) {
                 folders,
                 pages,
                 selectedNode,
+                selectedNodeMove,
                 setFolders,
                 setPages,
                 setSelectedNode,
+                setSelectedNodeMove,
                 setSelectedLibrary,
                 createLibrary,
                 createFolder,
                 createPage,
+                moveItem,
                 deleteItem
             }}>
             {children}

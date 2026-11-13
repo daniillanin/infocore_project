@@ -3,12 +3,13 @@ import type { DataContextInterface } from '../../types/DataContextTypes'
 import { useContext } from 'react'
 import { dataContext } from '../../contexts/DataContext'
 
-export function AppStructure() {
+export function AppStructure({setDialog}) {
     const {selectedNode, deleteItem} = useContext<DataContextInterface>(dataContext)
 
     return (
         <>
             <button onClick={deleteItem}>Удалить папку</button>
+            <button onClick={() => setDialog(true)}>Переместить папку</button>
             <p>{selectedNode ? selectedNode.label : ""}</p>
             <p>показ струтктуры в разработке...</p>
         </>

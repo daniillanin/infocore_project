@@ -1,10 +1,9 @@
 import './AppTree.scss'
+import type { TreeNode } from 'primereact/treenode'
+import type { DataContextInterface } from '../../types/DataContextTypes'
 import { useEffect, useState, useContext } from 'react'
 import { dataContext } from '../../contexts/DataContext'
-import { supabase } from '../../database/supabase'
 import { Tree } from 'primereact/tree'
-import type { TreeNode } from 'primereact/treenode'
-import type { DataContextInterface, Library } from '../../types/DataContextTypes'
 
 export function AppTree() {
     const {folders, pages, setSelectedNode} = useContext<DataContextInterface>(dataContext)

@@ -5,7 +5,7 @@ import { supabase } from '../../database/supabase'
 import { dataContext } from '../../contexts/DataContext'
 import { AppEditor } from '../AppEditor/AppEditor'
 
-export function AppPage() {
+export function AppPage({setDialog}) {
     const {selectedNode, setSelectedNode, setPages, deleteItem} = useContext<DataContextInterface>(dataContext)
 
     const setContent = (newValue: string): void => {  
@@ -24,6 +24,7 @@ export function AppPage() {
                 <h1>{selectedNode ? selectedNode.label : ''}</h1>
                 <button onClick={saveEdit}>Сохранить изменения</button>
                 <button onClick={deleteItem}>Удалить страницу</button>
+                <button onClick={() => setDialog(true)}>Переместить страницу</button>
             </div>  
             <div className='page-content'>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
             <div className='page-footer'></div>

@@ -11,10 +11,9 @@ export default function AppSidebar({visible, setVisible}: AppSidebarPropInterfac
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)}>
             <div className='sidebar-wrapper'>
-                <Button onClick={createLibrary}>Создать библиотеку</Button>
+                <Button onClick={createLibrary} disabled>Создать библиотеку</Button>
                 <Button onClick={createPage}>Создать страницу</Button>
                 <Button onClick={createFolder}>Создать папку</Button>
-                <p>наполнение сайдбара</p>
                 {/* добавить кнопки перехода в избранное, архив, изменения профиля, выхода */}
             </div>
         </Sidebar>
