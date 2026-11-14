@@ -2,6 +2,14 @@
     display: flex;
     flex-flow: column nowrap;
     height: 100%;
+    .page-header {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: end;
+        button {
+            margin-left: 5px;
+        }
+    }
     .page-content {
         margin-top: 10px;
         flex: 1 0 auto;

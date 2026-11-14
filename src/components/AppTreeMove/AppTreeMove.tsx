@@ -1,18 +1,19 @@
-import './AppTreeFolders.scss'
+import './AppTreeMove.scss'
 import type { TreeNode } from 'primereact/treenode'
 import type { DataContextInterface } from '../../types/DataContextTypes'
 import { useEffect, useState, useContext } from 'react'
 import { dataContext } from '../../contexts/DataContext'
 import { Tree } from 'primereact/tree'
 
-export function AppTreeFolders() {
-    const {folders, setSelectedNodeMove} = useContext<DataContextInterface>(dataContext)
+export function AppTreeMove() {
+    const {folders, selectedNode, setSelectedNodeMove} = useContext<DataContextInterface>(dataContext)
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
     useEffect(() => {
         if (folders) {
-            const cloneFolders: TreeNode[] = structuredClone(folders)
+            //клон массива папок с исключением выбранной папки из списка дерева
+            const cloneFolders: TreeNode[] = structuredClone(folders).filter((folder) => folder.id !== selectedNode?.id)
             //распределение вложенности папок по структуре
             const foldersMap = new Map<string, TreeNode>()
             cloneFolders?.forEach((folder) => foldersMap.set(folder.id!, folder))

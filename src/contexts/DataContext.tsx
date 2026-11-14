@@ -81,14 +81,24 @@ export function DataContextProvider({children}: DataContextProviderProps) {
     }
 
     const moveItem = async (): Promise<void> => {
-        if (selectedNodeMove && selectedNode?.data.type === 'folder') {
-            const { error } = await supabase.from('folders').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
-            !error ? setFolders((prev) => prev?.map((folder) => folder.id === selectedNode.id ? {...folder, data: {...folder.data, parentFolderID: selectedNodeMove.id}} : folder)) : console.log(error)
-            
-        } else if (selectedNodeMove && selectedNode?.data.type === 'page') {
-            const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
-            !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: selectedNodeMove.id}} : page)) : console.log(error)
-        }
+        if (selectedNodeMove) {
+            if (selectedNode?.data.type === 'folder') {
+                const { error } = await supabase.from('folders').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
+                !error ? setFolders((prev) => prev?.map((folder) => folder.id === selectedNode.id ? {...folder, data: {...folder.data, parentFolderID: selectedNodeMove.id}} : folder)) : console.log(error)
+                
+            } else if (selectedNode?.data.type === 'page') {
+                const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
+                !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: selectedNodeMove.id}} : page)) : console.log(error)
+            }
+        } else {
+            if (selectedNode?.data.type === 'folder') {
+                const { error } = await supabase.from('folders').update({data: {...selectedNode.data, parentFolderID: null}}).eq('id', selectedNode.id)
+                !error ? setFolders((prev) => prev?.map((folder) => folder.id === selectedNode.id ? {...folder, data: {...folder.data, parentFolderID: null}} : folder)) : console.log(error)
+            } else if (selectedNode?.data.type === 'page') {
+                const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: null}}).eq('id', selectedNode.id)
+                !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: null}} : page)) : console.log(error)
+            }
+        }  
     }
 
     const deleteItem = async (): Promise<void> => {

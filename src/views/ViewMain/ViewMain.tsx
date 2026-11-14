@@ -5,7 +5,7 @@ import { dataContext } from '../../contexts/DataContext'
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { AppTree } from "../../components/AppTree/AppTree"
-import { AppTreeFolders } from '../../components/AppTreeFolders/AppTreeFolders'
+import { AppTreeMove } from '../../components/AppTreeMove/AppTreeMove'
 import { AppNavbar } from "../../components/AppNavbar/AppNavbar"
 import { AppFooter } from '../../components/AppFooter/AppFooter'
 import { AppStructure } from "../../components/AppSrtucture/AppSrtucture"
@@ -16,15 +16,13 @@ export function ViewMain() {
     const [ visibleDialog, setVisibleDialog ] = useState(false)
 
     const buttonDialog = () => {
-
         const foldersOrDefault = () => {
             if (selectedNodeMove) {
                 return <Button onClick={moveItem}>Сохранить</Button>
             } else {
-                return <Button onClick={() => console.log('корень')}>В корень</Button>
+                return <Button onClick={moveItem}>В корень</Button>
             }
         }
-
         return (
             <>
                 <Button onClick={() => setVisibleDialog(false)}>Отменить</Button>
@@ -62,7 +60,7 @@ export function ViewMain() {
         visible={visibleDialog}
         style={{ width: '50vw' }}
         onHide={() => {if (!visibleDialog) return; setVisibleDialog(false)}}>
-            <AppTreeFolders/>
+            <AppTreeMove/>
         </Dialog>
         </>
     )

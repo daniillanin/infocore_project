@@ -4,6 +4,7 @@ import { useContext} from 'react'
 import { supabase } from '../../database/supabase'
 import { dataContext } from '../../contexts/DataContext'
 import { AppEditor } from '../AppEditor/AppEditor'
+import { Button } from 'primereact/button'
 
 export function AppPage({setDialog}) {
     const {selectedNode, setSelectedNode, setPages, deleteItem} = useContext<DataContextInterface>(dataContext)
@@ -21,11 +22,11 @@ export function AppPage({setDialog}) {
     return (
         <div className='page-wrapper'> 
             <div className='page-header'>
-                <h1>{selectedNode ? selectedNode.label : ''}</h1>
-                <button onClick={saveEdit}>Сохранить изменения</button>
-                <button onClick={deleteItem}>Удалить страницу</button>
-                <button onClick={() => setDialog(true)}>Переместить страницу</button>
-            </div>  
+                <Button size="small" icon="pi pi-save" severity="success" onClick={saveEdit}></Button>
+                <Button size="small" icon="pi pi-reply" onClick={() => setDialog(true)}/>
+                <Button size="small" icon="pi pi-trash" severity="danger" onClick={deleteItem}/>
+            </div>
+            <h1>{selectedNode ? selectedNode.label : ''}</h1>
             <div className='page-content'>{selectedNode ? <AppEditor content={selectedNode?.data.content} setContent={setContent}/> : ''}</div>
             <div className='page-footer'></div>
         </div>
