@@ -90,6 +90,7 @@ export function DataContextProvider({children}: DataContextProviderProps) {
                 const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: selectedNodeMove.id}}).eq('id', selectedNode.id)
                 !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: selectedNodeMove.id}} : page)) : console.log(error)
             }
+            setSelectedNodeMove(null)
         } else {
             if (selectedNode?.data.type === 'folder') {
                 const { error } = await supabase.from('folders').update({data: {...selectedNode.data, parentFolderID: null}}).eq('id', selectedNode.id)
