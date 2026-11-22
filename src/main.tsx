@@ -1,12 +1,14 @@
+import './main.scss'
+import 'primeicons/primeicons.css'
+import "primereact/resources/themes/lara-light-cyan/theme.css"
 import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 import { createBrowserRouter, Navigate } from 'react-router'
 import { RouterProvider } from 'react-router'
 import { App } from './App.tsx'
 import { ViewMain } from './views/ViewMain/ViewMain.tsx'
 import { PrimeReactProvider } from 'primereact/api'
-import './main.scss'
-import 'primeicons/primeicons.css'
-import "primereact/resources/themes/lara-light-cyan/theme.css"
 
 const router = createBrowserRouter([
   {
@@ -30,7 +32,9 @@ const router = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')!).render(
-  <PrimeReactProvider>
-    <RouterProvider router={router} />
-  </PrimeReactProvider> 
+  <Provider store={store}>
+    <PrimeReactProvider>
+      <RouterProvider router={router} />
+    </PrimeReactProvider> 
+  </Provider>
 )

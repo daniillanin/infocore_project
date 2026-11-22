@@ -1,11 +1,14 @@
 import './AppNavbar.scss'
+import type { DataReducerInterface } from '../../types/DataReducerTypes'
+import { SET_SELECTED_LIBRARY } from '../../store/actions/DataActions'
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import { dataContext } from '../../contexts/DataContext'
 import { Avatar } from 'primereact/avatar'
 import { Dropdown } from 'primereact/dropdown'
 import AppSidebar from '../AppSidebar/AppSidebar'
 
-export class AppNavbar extends Component {
+class AppNavbar extends Component {
     static contextType = dataContext
     state = {
         selectedLibrary: null,
@@ -23,7 +26,7 @@ export class AppNavbar extends Component {
     }
     componentDidUpdate(prevProps, prevState): void {
         if (prevState.selectedLibrary !== this.state.selectedLibrary) {
-            this.context.setSelectedLibrary(this.state.selectedLibrary)
+            this.props.SET_SELECTED_LIBRARY(this.state.selectedLibrary)
         }
     }
     render() {
@@ -33,7 +36,7 @@ export class AppNavbar extends Component {
                 <Dropdown
                     value={this.state.selectedLibrary}
                     onChange={(e) => this.setSelectedLibrary(e.value)}
-                    options={this.context.libraries}
+                    options={this.props.libraries}
                     optionLabel='name' 
                     placeholder='Выберите библиотеку'
                     className='navbar-dropdown'
@@ -49,3 +52,14 @@ export class AppNavbar extends Component {
         ) 
     }
 }
+
+const mapStateToProps = (state: DataReducerInterface) => {
+    return {
+        libraries: state.libraries
+    }
+}
+const mapDispatchToProps = {
+  SET_SELECTED_LIBRARY
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppNavbar)

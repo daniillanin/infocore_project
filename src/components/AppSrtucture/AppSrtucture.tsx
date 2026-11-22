@@ -1,17 +1,29 @@
 import './AppSrtucture.scss'
-import type { DataContextInterface } from '../../types/DataContextTypes'
-import { useContext } from 'react'
-import { dataContext } from '../../contexts/DataContext'
+import type { DataReducerInterface } from '../../types/DataReducerTypes'
+import { MOVE_ITEM, DELETE_ITEM } from '../../store/actions/DataActions'
+import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { AppModal } from '../AppModal/AppModal'
+import { AppTreeMove } from '../AppTreeMove/AppTreeMove'
 
-export function AppStructure({setDialog}) {
-    const {selectedNode, deleteItem} = useContext<DataContextInterface>(dataContext)
+export function AppStructure() {
+    const selectedNode = useSelector((state: DataReducerInterface) => state.selectedNode)
+    const dispatch = useDispatch()
+    const [ visibleModal, setVisibleModal ] = useState(false)
 
     return (
         <>
-            <button onClick={deleteItem}>Удалить папку</button>
-            <button onClick={() => setDialog(true)}>Переместить папку</button>
+            <button onClick={() => dispatch(DELETE_ITEM())}>Удалить папку</button>
+            <button onClick={() => setVisibleModal(true)}>Переместить папку</button>
             <p>{selectedNode ? selectedNode.label : ""}</p>
             <p>показ струтктуры в разработке...</p>
+            <AppModal
+                title={'Выберите папку для перемещения'}
+                visible={visibleModal}
+                setVisible={setVisibleModal}
+                onSaveButton={() => dispatch(MOVE_ITEM())}>
+                <AppTreeMove/>
+            </AppModal>
         </>
     )
 }

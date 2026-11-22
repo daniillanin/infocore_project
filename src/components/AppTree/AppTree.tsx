@@ -1,12 +1,14 @@
 import './AppTree.scss'
 import type { TreeNode } from 'primereact/treenode'
-import type { DataContextInterface } from '../../types/DataContextTypes'
-import { useEffect, useState, useContext } from 'react'
-import { dataContext } from '../../contexts/DataContext'
+import type { DataReducerInterface } from '../../types/DataReducerTypes'
+import { useEffect, useState } from 'react'
 import { Tree } from 'primereact/tree'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function AppTree() {
-    const {folders, pages, setSelectedNode} = useContext<DataContextInterface>(dataContext)
+    const folders = useSelector((state: DataReducerInterface) => state.folders)
+    const pages = useSelector((state: DataReducerInterface) => state.pages)
+    const dispatch = useDispatch()
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
@@ -41,8 +43,8 @@ export function AppTree() {
             selectionMode="single"
             selectionKeys={selectedKey}
             onSelectionChange={(e) => setSelectedKey(e.value as string)}
-            onSelect={(e) => setSelectedNode(e.node)}
-            onUnselect={() => setSelectedNode(null)}
+            onSelect={(e) => dispatch({type: "SET_SELECTED_NODE", payload: e.node})}
+            onUnselect={() => dispatch({type: "SET_SELECTED_NODE", payload: null})}
             filter
             filterMode="lenient"
             filterPlaceholder="Поиск"

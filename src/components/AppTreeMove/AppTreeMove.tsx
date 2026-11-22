@@ -1,12 +1,14 @@
 import './AppTreeMove.scss'
 import type { TreeNode } from 'primereact/treenode'
-import type { DataContextInterface } from '../../types/DataContextTypes'
-import { useEffect, useState, useContext } from 'react'
-import { dataContext } from '../../contexts/DataContext'
+import type { DataReducerInterface } from '../../types/DataReducerTypes'
+import { useEffect, useState } from 'react'
 import { Tree } from 'primereact/tree'
+import { useSelector, useDispatch } from 'react-redux'
 
 export function AppTreeMove() {
-    const {folders, selectedNode, setSelectedNodeMove} = useContext<DataContextInterface>(dataContext)
+    const folders = useSelector((state: DataReducerInterface) => state.folders)
+    const selectedNode = useSelector((state: DataReducerInterface) => state.selectedNode)
+    const dispatch = useDispatch()
     const [structure, setStructure] = useState<TreeNode[]>([])
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
@@ -36,8 +38,8 @@ export function AppTreeMove() {
             selectionMode="single"
             selectionKeys={selectedKey}
             onSelectionChange={(e) => setSelectedKey(e.value as string)}
-            onSelect={(e) => setSelectedNodeMove(e.node)}
-            onUnselect={() => setSelectedNodeMove(null)}
+            onSelect={(e) => dispatch({type: "SET_SELECTED_NODE_MOVE", payload: e.node})}
+            onUnselect={() => dispatch({type: "SET_SELECTED_NODE_MOVE", payload: null})}
             // filter
             // filterMode="lenient"
             // filterPlaceholder="Поиск"

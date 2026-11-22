@@ -1,5 +1,5 @@
 import classes from './AppEditor.module.scss'
-import type { AppEditorPropInterface } from '../../types/AppEditorTypes'
+import type { AppEditorPropInterface } from './AppEditorTypes'
 import { useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'

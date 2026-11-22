@@ -23,61 +23,68 @@ export function DataContextProvider({children}: DataContextProviderProps) {
             key: `LIB${number}`,
             name: `Библиотека ${number}`,
         }
-        await supabase.from('libraries').insert(library)
+        const { error } = await supabase.from('libraries').insert(library)
+        !error ? setLibraries((prev) => [...prev!, library]) : null
     }
 
     const createFolder = async (): Promise<void> => {
-        const createUUID = crypto.randomUUID()
-        const folder: TreeNode = {
-            id: createUUID,
-            key: createUUID,
-            label: `Папка ${Math.floor(Math.random() * 1000) + 1}`,
-            data: {
-                type: 'folder',
-                parentFolderID: null,
-                libraryID: selectedLibrary?.id,
-                archive: false,
-                level: null
-            },
-            icon: 'pi pi-fw pi-folder',
-            children: [],
-            style: undefined,
-            className: undefined,
-            droppable: undefined,
-            draggable: undefined,
-            selectable: undefined,
-            leaf: undefined,
-            expanded: undefined
-        }
-        const { error } = await supabase.from('folders').insert(folder)
-        !error ? setFolders((prev) => [...prev!, folder]) : null
+        if (selectedLibrary) {
+            const createUUID = crypto.randomUUID()
+            const folder: TreeNode = {
+                id: createUUID,
+                key: createUUID,
+                label: `Папка ${Math.floor(Math.random() * 1000) + 1}`,
+                data: {
+                    type: 'folder',
+                    parentFolderID: null,
+                    libraryID: selectedLibrary?.id,
+                    archive: false,
+                    level: null,
+                    timeCreated: new Date().getTime()
+                },
+                icon: 'pi pi-fw pi-folder',
+                children: [],
+                style: undefined,
+                className: undefined,
+                droppable: undefined,
+                draggable: undefined,
+                selectable: undefined,
+                leaf: undefined,
+                expanded: undefined
+            }
+            const { error } = await supabase.from('folders').insert(folder)
+            !error ? setFolders((prev) => [...prev!, folder]) : null
+            }
     }
 
     const createPage = async (): Promise<void> => {
-        const createUUID = crypto.randomUUID()
-        const page: TreeNode = {
-            id: createUUID,
-            key: createUUID,
-            label: `Страница ${Math.floor(Math.random() * 1000) + 1}`,
-            data: {
-                type: 'page',
-                parentFolderID: null,
-                libraryID: selectedLibrary?.id,
-                archive: false,
-                content: '<p>Текст параграфа</p>'
-            },
-            icon: 'pi pi-fw pi-file',
-            children: undefined,
-            style: undefined,
-            className: undefined,
-            droppable: undefined,
-            draggable: undefined,
-            selectable: undefined,
-            leaf: undefined,
-            expanded: undefined
+        if (selectedLibrary) {
+            const createUUID = crypto.randomUUID()
+            const page: TreeNode = {
+                id: createUUID,
+                key: createUUID,
+                label: `Страница ${Math.floor(Math.random() * 1000) + 1}`,
+                data: {
+                    type: 'page',
+                    parentFolderID: null,
+                    libraryID: selectedLibrary?.id,
+                    archive: false,
+                    content: '<p>Текст параграфа</p>',
+                    timeCreated: new Date().getTime()
+                },
+                icon: 'pi pi-fw pi-file',
+                children: undefined,
+                style: undefined,
+                className: undefined,
+                droppable: undefined,
+                draggable: undefined,
+                selectable: undefined,
+                leaf: undefined,
+                expanded: undefined
+            }
+            const { error } = await supabase.from('pages').insert(page)
+            !error ? setPages((prev) => [...prev!, page]) : null
         }
-        const { error } = await supabase.from('pages').insert(page)
-        !error ? setPages((prev) => [...prev!, page]) : null
     }
 
     const moveItem = async (): Promise<void> => {
@@ -99,7 +106,7 @@ export function DataContextProvider({children}: DataContextProviderProps) {
                 const { error } = await supabase.from('pages').update({data: {...selectedNode.data, parentFolderID: null}}).eq('id', selectedNode.id)
                 !error ? setPages((prev) => prev?.map((page) => page.id === selectedNode.id ? {...page, data: {...page.data, parentFolderID: null}} : page)) : console.log(error)
             }
-        }  
+        }
     }
 
     const deleteItem = async (): Promise<void> => {
