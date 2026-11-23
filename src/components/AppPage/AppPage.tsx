@@ -11,10 +11,10 @@ import { AppModal } from '../AppModal/AppModal'
 import { AppTreeMove } from '../AppTreeMove/AppTreeMove'
 
 export function AppPage() {
+    const [ visibleModal, setVisibleModal ] = useState(false)
     const selectedNode = useSelector((state: DataReducerInterface) => state.selectedNode)
     const pages = useSelector((state: DataReducerInterface) => state.pages)
     const dispatch = useDispatch()
-    const [ visibleModal, setVisibleModal ] = useState(false)
     const toast = useRef(null)
 
     const setContent = (newValue: string): void => {  
@@ -41,9 +41,9 @@ export function AppPage() {
             <div className='page-footer'></div>
             <Toast ref={toast}/>
             <AppModal
-                title={'Выберите папку для перемещения'}
-                visible={visibleModal}
-                setVisible={setVisibleModal}
+                visibleModal={visibleModal}
+                titleModal={'Выберите папку для перемещения'}
+                setVisibleModal={setVisibleModal}
                 onSaveButton={() => dispatch(MOVE_ITEM())}>
                 <AppTreeMove/>
             </AppModal>

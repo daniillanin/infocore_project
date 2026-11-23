@@ -18,9 +18,9 @@ export function AppStructure() {
             <p>{selectedNode ? selectedNode.label : ""}</p>
             <p>показ струтктуры в разработке...</p>
             <AppModal
-                title={'Выберите папку для перемещения'}
-                visible={visibleModal}
-                setVisible={setVisibleModal}
+                titleModal='Выберите папку для перемещения'
+                visibleModal={visibleModal}
+                setVisibleModal={setVisibleModal}
                 onSaveButton={() => dispatch(MOVE_ITEM())}>
                 <AppTreeMove/>
             </AppModal>
