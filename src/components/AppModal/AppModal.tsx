@@ -29,7 +29,7 @@ export function AppModal({ children, titleModal, visibleModal, setVisibleModal, 
 
     const header = () => {
         return (
-            <p>{ titleModal }</p>
+            <p>{titleModal}</p>
         )
     }
     const footer = () => {

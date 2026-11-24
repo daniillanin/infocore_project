@@ -1,8 +1,9 @@
+import type { AppConfirmPropInterface } from './AppConfirmTypes'
 import { useEffect, useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 
-export function AppConfirm({ visibleConfirm, setVisibleConfirm, titleConfirm, onSaveButton }) {
+export function AppConfirm({ children, visibleConfirm, setVisibleConfirm, titleConfirm, onSaveButton }: AppConfirmPropInterface) {
     const [ resolveConfirm, setResolveConfirm ] = useState<((a: boolean) => void) | null>(null)
 
     const openConfirm = () => {
@@ -47,7 +48,7 @@ export function AppConfirm({ visibleConfirm, setVisibleConfirm, titleConfirm, on
             header={headerConfirm()}
             footer={footerConfirm()}
             style={{ width: '20vw' }}>
-            {/* { children } */}
+            { children }
         </Dialog>
     )
 }

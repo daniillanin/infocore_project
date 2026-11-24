@@ -128,8 +128,6 @@ export const DELETE_ITEM = () => async (dispatch: any, getState: any): Promise<v
     const folders = getState().folders
     const pages = getState().pages
     const selectedNode = getState().selectedNode
-    console.log(folders, pages, selectedNode);
-    
     if (selectedNode.data.type === 'folder') {
         const { data: childrenFolders } = await supabase.from('folders').select().eq('data->>parentFolderID', selectedNode?.id)
         const { data: childrenPages } = await supabase.from('pages').select().eq('data->>parentFolderID', selectedNode?.id)
